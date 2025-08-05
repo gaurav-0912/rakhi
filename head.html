@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Raksha Bandhan Gift</title>
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Baloo 2', cursive;
+      background: linear-gradient(to bottom right, #fff0f5, #ffe4e1);
+      text-align: center;
+      padding: 2rem;
+      color: #333;
+    }
+
+    h1 {
+      color: #d63384;
+      margin-bottom: 1rem;
+    }
+
+    input {
+      padding: 0.6rem;
+      font-size: 1rem;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      margin-bottom: 2rem;
+    }
+
+    .gift-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: center;
+    }
+
+    .gift-card {
+      background: #fff;
+      border: 2px solid #d63384;
+      border-radius: 12px;
+      padding: 1rem;
+      width: 160px;
+      cursor: pointer;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      transition: transform 0.2s;
+    }
+
+    .gift-card:hover {
+      transform: scale(1.05);
+    }
+
+    .gift-card.selected {
+      background: #d63384;
+      color: white;
+      border: 2px solid #fff;
+    }
+
+    button {
+      margin-top: 1.5rem;
+      padding: 0.8rem 2rem;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+
+    .message {
+      margin-top: 1rem;
+      color: green;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <h1>🎁 Happy Raksha Bandhan!</h1>
+  <p>Enter your name and pick a gift:</p>
+  <input type="text" id="sisterName" placeholder="Enter your name..." />
+  <div class="gift-container" id="giftContainer"></div>
+  <button onclick="submitChoice()">Submit</button>
+  <p class="message" id="msg"></p>
+
+  <script>
+    const gifts = ['Chocolate Box', 'Perfume', 'Handbag', 'Jewelry Set', 'Book', 'Plant'];
+    const container = document.getElementById('giftContainer');
+    let selectedGift = null;
+
+    gifts.forEach(gift => {
+      const div = document.createElement('div');
+      div.className = 'gift-card';
+      div.innerText = gift;
+      div.onclick = () => {
+        document.querySelectorAll('.gift-card').forEach(card => card.classList.remove('selected'));
+        div.classList.add('selected');
+        selectedGift = gift;
+      };
+      container.appendChild(div);
+    });
+
+    async function submitChoice() {
+      const name = document.getElementById('sisterName').value.trim();
+      const msg = document.getElementById('msg');
+      if (!name || !selectedGift) {
+        msg.textContent = "Please enter your name and select a gift.";
+        msg.style.color = "red";
+        return;
+      }
+
+      const response = await fetch("AKfycbxOLB4OH5cdKlrRub2rFa6UrIe5W638wGKay-yTHSHu", {
+        method: "POST",
+        body: JSON.stringify({ name, gift: selectedGift }),
+        headers: { "Content-Type": "application/json" }
+      });
+
+      if (response.ok) {
+        msg.textContent = Thank you ${name}! Your gift choice "${selectedGift}" has been saved. 💖;
+        msg.style.color = "green";
+      } else {
+        msg.textContent = "Something went wrong. Please try again.";
+        msg.style.color = "red";
+      }
+    }
+  </script>
+</body>
+</html>
